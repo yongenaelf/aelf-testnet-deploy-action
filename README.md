@@ -55,7 +55,7 @@ Whenever you make changes to index.js, build and push using these commands:
 npm run build
 git add .
 git commit -m "feat: your commit message"
-git tag -a -m "My release message" v1.2 # tag if needed
+git tag -a -m "My release message" v1.2.1 # tag if needed
 git push --follow-tags
 ```
 

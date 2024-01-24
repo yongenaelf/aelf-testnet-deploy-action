@@ -63992,7 +63992,7 @@ async function deserializeLogs(aelf, logs = []) {
 
     const res = await aelf.chain.getTxResult(TransactionId);
     const logs = await deserializeLogs(aelf, res.Logs);
-    const proposalId = logs.find(
+    const proposalId = logs?.find(
       (i) => typeof i.proposalId === "string"
     )?.proposalId;
 
