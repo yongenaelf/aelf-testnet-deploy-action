@@ -114,6 +114,8 @@ async function deserializeLogs(aelf, logs = []) {
       code: fileStr,
     });
 
+    await sleep(1000); // introduce a wait in case the transaction has not completed yet
+
     const res = await aelf.chain.getTxResult(TransactionId);
     const logs = await deserializeLogs(aelf, res.Logs);
     const proposalId = logs?.find(
