@@ -63,7 +63,8 @@ const fs = require("fs");
 
     const link = `https://explorer-test-side02.aelf.io/tx/${TransactionId}`;
 
-    core.summary
+    await core.summary
+      .addDetails("transactionId", TransactionId)
       .addLink("View the transaction on AElf Explorer.", link)
       .write();
   } catch (error) {

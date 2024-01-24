@@ -63936,10 +63936,13 @@ const fs = __nccwpck_require__(7147);
       category: 0,
       code: fileStr,
     });
+    core.setOutput("deployment-transaction-id", TransactionId);
+    console.log(TransactionId);
 
     const link = `https://explorer-test-side02.aelf.io/tx/${TransactionId}`;
 
-    core.summary
+    await core.summary
+      .addDetails("transactionId", TransactionId)
       .addLink("View the transaction on AElf Explorer.", link)
       .write();
   } catch (error) {
