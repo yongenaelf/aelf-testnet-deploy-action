@@ -3,6 +3,7 @@ const core = require("@actions/core");
 const AElf = require("aelf-sdk");
 const BigNumber = require("bignumber.js");
 const fs = require("fs");
+const fetch = require("node-fetch");
 
 function sleep(ms) {
   return new Promise((resolve) => {
