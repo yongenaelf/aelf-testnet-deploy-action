@@ -32,8 +32,8 @@ Block Hash used to check for deployed contract address.
 2. Using [Portkey](https://portkey.finance/), get some testnet tokens at https://testnet-faucet.aelf.io/, transfer to the sidechain of the wallet in (1).
 
 ```yaml
-uses: yongenaelf/aelf-testnet-deploy-action@HASH
+uses: yongenaelf/aelf-testnet-deploy-action@v1.0
 with:
-  private-key: "PRIVATE_KEY"
-  wallet-address: "WALLET_ADDRESS"
+  private-key: ${{ secrets.PrivateKey }}
+  wallet-address: ${{ secrets.WalletAddress }}
 ```
