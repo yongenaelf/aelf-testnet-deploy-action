@@ -1,0 +1,23 @@
+name: "AElf Testnet Deploy Action"
+description: "Builds and Deploys to AElf Testnet"
+inputs:
+  private-key:
+    description: "Private key generated with aelf-command"
+    required: true
+  wallet-address:
+    description: "AElf Address of the wallet associated with the private key"
+    required: true
+  dll-filename:
+    description: "Path to the dll.patched file"
+    required: true
+    default: "src/bin/Debug/net6.0/HelloWorld.dll.patched"
+  node-url:
+    description: "AElf Blockchain node url"
+    required: true
+    default: "https://tdvw-test-node.aelf.io"
+outputs:
+  block-hash:
+    description: "Block Hash used to check for deployed contract address"
+runs:
+  using: "node20"
+  main: "dist/index.js"
