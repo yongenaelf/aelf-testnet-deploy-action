@@ -64013,13 +64013,17 @@ async function deserializeLogs(aelf, logs = []) {
       .write();
 
     while (proposalStatus === "pending") {
-      proposalStatus = (
-        await (
-          await fetch(
-            `https://explorer-test-side02.aelf.io/api/proposal/proposalInfo?proposalId=${proposalId}`
-          )
-        ).json()
-      ).data.proposal.status;
+      const { data } = await (
+        await fetch(
+          `https://explorer-test-side02.aelf.io/api/proposal/proposalInfo?proposalId=${proposalId}`
+        )
+      ).json();
+
+      proposalStatus = data?.proposal?.status;
+
+      if (proposalStatus === undefined) {
+        throw new Error("no proposal status");
+      }
 
       if (proposalStatus === "expired") {
         throw new Error(`Proposal ${proposalId} has expired.`);
@@ -64033,13 +64037,17 @@ async function deserializeLogs(aelf, logs = []) {
     }
 
     if (proposalStatus === "released") {
-      const releasedTxId = (
-        await (
-          await fetch(
-            `https://explorer-test-side02.aelf.io/api/proposal/proposalInfo?proposalId=${proposalId}`
-          )
-        ).json()
-      ).data.proposal.releasedTxId;
+      const { data } = await (
+        await fetch(
+          `https://explorer-test-side02.aelf.io/api/proposal/proposalInfo?proposalId=${proposalId}`
+        )
+      ).json();
+
+      const releasedTxId = data?.proposal?.releasedTxId;
+
+      if (releasedTxId === undefined) {
+        throw new Error("no releasedTxId");
+      }
 
       const target = await aelf.chain.getTxResult(releasedTxId);
 
