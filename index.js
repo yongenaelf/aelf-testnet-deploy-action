@@ -1,5 +1,5 @@
 const core = require("@actions/core");
-const github = require("@actions/github");
+// const github = require("@actions/github");
 const AElf = require("aelf-sdk");
 const BigNumber = require("bignumber.js");
 const fs = require("fs");
@@ -67,7 +67,8 @@ const fs = require("fs");
       category: 0,
       code: fileStr,
     });
-  } catch (err) {
-    console.log(err);
+  } catch (error) {
+    console.log(error);
+    core.setFailed(error.message);
   }
 })();

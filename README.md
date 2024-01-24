@@ -33,7 +33,7 @@ Block Hash used to check for deployed contract address.
 3. Add the private key (PrivateKey) and wallet address (WalletAddress) as [GitHub secrets](https://docs.github.com/en/actions/security-guides/using-secrets-in-github-actions#creating-secrets-for-a-repository) in the repository consuming this action.
 
 ```yaml
-uses: yongenaelf/aelf-testnet-deploy-action@v1.0
+uses: yongenaelf/aelf-testnet-deploy-action@v1.1
 with:
   private-key: ${{ secrets.PrivateKey }}
   wallet-address: ${{ secrets.WalletAddress }}
