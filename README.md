@@ -38,3 +38,27 @@ with:
   private-key: ${{ secrets.PrivateKey }}
   wallet-address: ${{ secrets.WalletAddress }}
 ```
+
+## For developers
+
+### Install ncc
+
+```bash
+npm i -g @vercel/ncc
+```
+
+### Build
+
+Whenever you make changes to index.js, build and push using these commands:
+
+```bash
+npm run build
+git add .
+git commit -m "feat: your commit message"
+git tag -a -m "My release message" v1.1 # tag if needed
+git push --follow-tags
+```
+
+### References
+
+https://docs.github.com/en/actions/creating-actions/creating-a-javascript-action
