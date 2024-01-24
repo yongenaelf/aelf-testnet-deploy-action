@@ -22,9 +22,9 @@ This action deploys a given compiled aelf contract to the aelf testnet.
 
 ## Outputs
 
-### `block-hash`
+### `deployed-contract-address`
 
-Block Hash used to check for deployed contract address.
+Deployed contract address.
 
 ## Example usage
 
@@ -55,7 +55,7 @@ Whenever you make changes to index.js, build and push using these commands:
 npm run build
 git add .
 git commit -m "feat: your commit message"
-git tag -a -m "My release message" v1.1 # tag if needed
+git tag -a -m "My release message" v1.2 # tag if needed
 git push --follow-tags
 ```
 
