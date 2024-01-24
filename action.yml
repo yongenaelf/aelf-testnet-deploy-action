@@ -16,8 +16,8 @@ inputs:
     required: true
     default: "https://tdvw-test-node.aelf.io"
 outputs:
-  block-hash:
-    description: "Block Hash used to check for deployed contract address"
+  deployment-transaction-id:
+    description: "Deployment transaction id."
 runs:
   using: "node20"
   main: "dist/index.js"

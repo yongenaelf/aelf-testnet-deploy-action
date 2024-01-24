@@ -22,9 +22,9 @@ This action deploys a given compiled aelf contract to the aelf testnet.
 
 ## Outputs
 
-### `deployed-contract-address`
+### `deployment-transaction-id`
 
-Deployed contract address.
+Deployment transaction id.
 
 ## Example usage
 
@@ -33,7 +33,7 @@ Deployed contract address.
 3. Add the private key (PrivateKey) and wallet address (WalletAddress) as [GitHub secrets](https://docs.github.com/en/actions/security-guides/using-secrets-in-github-actions#creating-secrets-for-a-repository) in the repository consuming this action.
 
 ```yaml
-uses: yongenaelf/aelf-testnet-deploy-action@v1.3.3
+uses: yongenaelf/aelf-testnet-deploy-action@v1.4
 with:
   private-key: ${{ secrets.PrivateKey }}
   wallet-address: ${{ secrets.WalletAddress }}
@@ -55,7 +55,7 @@ Whenever you make changes to index.js, build and push using these commands:
 npm run build
 git add .
 git commit -m "feat: your commit message"
-git tag -a -m "My release message" v1.3.3 # tag if needed
+git tag -a -m "My release message" v1.4 # tag if needed
 git push --follow-tags
 ```
 
