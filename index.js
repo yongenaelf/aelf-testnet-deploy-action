@@ -4,6 +4,12 @@ const AElf = require("aelf-sdk");
 const BigNumber = require("bignumber.js");
 const fs = require("fs");
 
+function sleep(ms) {
+  return new Promise((resolve) => {
+    setTimeout(resolve, ms);
+  });
+}
+
 async function getProto(aelf, address) {
   return AElf.pbjs.Root.fromDescriptor(
     await aelf.chain.getContractFileDescriptorSet(address)
@@ -103,10 +109,6 @@ async function deserializeLogs(aelf, logs = []) {
 
     const fileStr = fs.readFileSync(DLL_FILENAME).toString("base64");
 
-    let currentBlockHeight = await aelf.chain.getBlockHeight(),
-      count = 0,
-      found = false;
-
     const { TransactionId } = await zeroContract.DeployUserSmartContract({
       category: 0,
       code: fileStr,
@@ -118,50 +120,71 @@ async function deserializeLogs(aelf, logs = []) {
       (i) => typeof i.proposalId === "string"
     )?.proposalId;
 
-    while (count < MAX_BLOCKS_TO_SCAN && !found) {
-      const { BlockHash } = await aelf.chain.getBlockByHeight(
-        currentBlockHeight,
-        false
+    if (!proposalId) {
+      throw new Error(
+        `No proposalId found for transactionId ${TransactionId}.`
       );
-      const results = await aelf.chain.getTxResults(BlockHash, 0, 10);
+    }
 
-      const target = results.find(
-        (result) =>
-          result.Transaction.MethodName === "ReleaseApprovedUserSmartContract"
+    let proposalStatus = "pending";
+    const proposalLink = `https://explorer-test-side02.aelf.io/proposal/proposalsDetail/${proposalId}`;
+    core.summary
+      .addLink("View the proposal on AElf Explorer.", proposalLink)
+      .write();
+
+    while (proposalStatus === "pending") {
+      proposalStatus = (
+        await (
+          await fetch(
+            `https://explorer-test-side02.aelf.io/api/proposal/proposalInfo?proposalId=${proposalId}`
+          )
+        ).json()
+      ).data.proposal.status;
+
+      if (proposalStatus === "expired") {
+        throw new Error(`Proposal ${proposalId} has expired.`);
+      }
+
+      console.log(
+        `Proposal status of ${proposalId}: ${proposalStatus}. Re-checking in 5s...`
       );
+
+      await sleep(5000);
+    }
+
+    if (proposalStatus === "released") {
+      const releasedTxId = (
+        await (
+          await fetch(
+            `https://explorer-test-side02.aelf.io/api/proposal/proposalInfo?proposalId=${proposalId}`
+          )
+        ).json()
+      ).data.proposal.releasedTxId;
+
+      const target = await aelf.chain.getTxResult(releasedTxId);
 
       if (target) {
         const { Logs } = target;
         const logs = await deserializeLogs(aelf, Logs);
 
-        const proposalLog = logs?.find((l) => l.proposalId === proposalId);
+        const deployedLog = logs?.find(
+          (l) => typeof l.contractVersion === "string"
+        );
 
-        if (proposalLog) {
-          const deployedLog = logs?.find(
-            (l) => typeof l.contractVersion === "string"
-          );
+        if (deployedLog) {
+          const deployedContractAddress = deployedLog.address;
+          console.log(deployedContractAddress);
+          found = true;
+          core.setOutput("deployed-contract-address", deployedContractAddress);
 
-          if (deployedLog) {
-            const deployedContractAddress = deployedLog.address;
-            console.log(deployedContractAddress);
-            found = true;
-            core.setOutput(
-              "deployed-contract-address",
-              deployedContractAddress
-            );
+          const link = `https://explorer-test-side02.aelf.io/address/${deployedContractAddress}#contract`;
+          console.log(`Visit ${link} to view the contract on AElf Explorer.`);
 
-            const link = `https://explorer-test-side02.aelf.io/address/${deployedContractAddress}#contract`;
-            console.log(`Visit ${link} to view the contract on AElf Explorer.`);
-
-            core.summary
-              .addLink("View the contract on AElf Explorer.", link)
-              .write();
-          }
+          core.summary
+            .addLink("View the contract on AElf Explorer.", link)
+            .write();
         }
       }
-
-      currentBlockHeight++;
-      count++;
     }
   } catch (error) {
     console.log(error);
