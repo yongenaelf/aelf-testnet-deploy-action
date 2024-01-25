@@ -1,5 +1,7 @@
 # AElf Testnet Deploy javascript action
 
+[![semantic-release: angular](https://img.shields.io/badge/semantic--release-angular-e10079?logo=semantic-release)](https://github.com/semantic-release/semantic-release)
+
 This action deploys a given compiled aelf contract to the aelf testnet.
 
 ## Inputs
