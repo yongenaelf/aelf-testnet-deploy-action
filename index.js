@@ -5,10 +5,10 @@ const fs = require("fs");
 
 (async () => {
   try {
-    const PRIVATE_KEY = core.getInput("private-key");
-    const WALLET_ADDRESS = core.getInput("wallet-address");
-    const DLL_FILENAME = core.getInput("dll-filename");
-    const NODE_URL = core.getInput("node-url");
+    const PRIVATE_KEY = core.getInput("private-key", { required: true });
+    const WALLET_ADDRESS = core.getInput("wallet-address", { required: true });
+    const DLL_FILENAME = core.getInput("dll-filename", { required: true });
+    const NODE_URL = core.getInput("node-url", { required: true });
 
     const aelf = new AElf(new AElf.providers.HttpProvider(NODE_URL));
 
@@ -42,7 +42,7 @@ const fs = require("fs");
       owner: WALLET_ADDRESS,
     });
 
-    if (balance === "0") {
+    if (new BigNumber(balance).toNumber() === 0) {
       throw new Error(
         "Please claim your tokens from faucet: https://testnet-faucet.aelf.io/"
       );
